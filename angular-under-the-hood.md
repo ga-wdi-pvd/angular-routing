@@ -7,7 +7,9 @@ Open up your Chrome console and enter `console.log(angular)`. Click on the outpu
 This is the `angular` object. It contains absolutely everything that has to do with Angular. You can see it has some weird things attached to it, like `getTestability` and `$$csp`, but it also has a whole bunch of pretty easy-to-read things: `angular.isDate`, `angular.forEach`, `angular.toJson`, and so on.
 
 Q. What are all these things attached to the `angular` object? Why are they here?
+
 ---
+
 > They're convenience methods -- things that don't come built-in with Javascript, but are handy to have around.
 
 **Those of you using Chrome** click on `module`, then `<function scope>`. This is a Chrome-only thing that shows all of the variables available in the scope of this object. Click on `Closure`, then `b: Object`.
@@ -37,8 +39,10 @@ Now, only those of you in Chrome again, open the last `Closure` inside `<functio
 ![Letter-named methods](http://i.imgur.com/yIxpbnA.png)
 
 Q. What is this stuff? (Hint: We're loading Angular from a file called `angular.min.js`.
+
 ---
-> This is minified code. When you minify Javascript, in order to save memory functions and variables are renamed to just letters of the alphabet. 
+
+> This is minified code. When you minify Javascript, in order to save memory functions and variables are renamed to just letters of the alphabet.
 
 If I remove the `.min` from the `<script>` tag in my HTML, all of these indecipherable function names are replaced with English-y function names like `$AnchorScrollProvider`, `MOZ_HACK_REGEXP`, `PRISTINE_CLASS`, and so on.
 
@@ -73,5 +77,7 @@ angular.module("grumblr", ["ui.router"]);
 We put something called "ui.router" in that array. You may recognize it as another one of the modules we have. Checking `grumblr.requires` again, it's now an array with one thing inside it -- `ui.router`!
 
 Q. Based on your experiences with the word `require` so far, what does this array in `angular.module` do?
+
 ---
+
 > It says which dependencies should be included in this module.
