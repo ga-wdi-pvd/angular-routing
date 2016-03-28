@@ -11,24 +11,62 @@
 - Explain what dependency injection is and what problem it solves
 - Explain the purpose of templates in Angular
 - Create separate views and routes for each CRUD action
-- Use the ng-view directive to load angular templates
-- Use $stateProvider and $state to access query parameters and update the URL
+- Use the `ui-view` directive to load angular templates
+- Use `$stateProvider` and `$state` to access query parameters and update the URL
 - Define multiple controllers in a single module
 
-# Building an actual Angular app
+## Framing (3 / 3)
 
-...is going to be what we start doing today. So far, we've pretty much just played around with some of Angular's different built-in components. Now we're going to start writing our own components.
+So far we've been learning about Angular and its awesome power as front-end framework to allow us to easily build Single Page Apps.  
 
-# Getting set up
+**Q**: What are some of the characteristics of SPAs?
 
-If you haven't already, please fork the grumblr_angular repo
+> Single Page Applications are Web apps that load a single HTML page and dynamically update that page as the user interacts with the app. SPAs use AJAX and HTML5 to create fluid and responsive web apps, without constant page reloads.
 
-    $ git clone https://github.com/ga-dc/grumblr_angular
+### Turn and Talk: Problems with SPA's (2 / 5)
 
-You can get today's starter code by checking out a new branch:
+Take 1 minute to brainstorm any potential problems with SPAs. Then take another minute coming up with a short list with your neighbor; we'll go around and share with the class.
+
+---
+
+### [Common Problems with SPA's](https://github.com/ga-wdi-lessons/angular-routing/blob/master/common-problems-with-spas.md) (2 / 7)
+
+Many of the common problems with SPAs have to do with the question of how to manage an application's state. This is most evident with issues related to **bookmarking** and **deep linking**.
+
+### Application State Exemplified (5 / 12)
+
+In order to get a better grasp of what we mean by an app's state, let take a look at a prolific SPA in the wild, [Trello](https://trello.com/).
+
+Trello is a productivity management tool, that allows a user to have many different "boards", or a list of lists, and each board is made up of different "cards", or items in a list.
+
+Let's play around with a board, and see what happens to the url when we interact with the app.
+
+## [UI Router](https://github.com/angular-ui/ui-router) to the Rescue
+
+Today, we are going to be looking at one wildly popular solution in Angular to help address the problems we've uncovered with SPAs.
+
+Specifically, Angular UI-Router is a client-side SPA routing framework that updates the browser's URL as the user navigates through the app.
+
+As a result, this allows changes to the browser's URL to drive navigation through the app, thus allowing the user to create a bookmark to a location deep within the SPA.
+
+## Let's Build an Angular App
+
+Today, we are going to build off of what we learned in the intro class, and construct an app from scratch utilizing `uiRouter`. We're going to look at how we can build a SPA with multiple views and controllers.
+
+## Getting set up
+
+To start, please fork the `grumblr_angular` [repo](https://github.com/ga-wdi-exercises/grumblr_angular), then clone down locally
+
+You can get today's **starter** code by checking out a new branch:
 
     $ git checkout -b ui-router 1.0.0
 
+
+<!-- TODO: Can axe explanation of HS -->
+
+<!-- Reveal solution: Talk about Medium picture: How is UI Router interfacing with our app  -->
+
+<!-- TODO: axe this section -->
 ## http-server
 
 Angular makes a bunch of AJAX requests, which can get a little hairy when you're not serving it through an actual server: that is, when it shows up as `file:///` in your browser rather than `localhost`.
@@ -52,15 +90,18 @@ $ http-server
 
 It's all terribly exciting: the word `Grumblr`, and that's pretty much it.
 
-Grumblr is like Tumblr, only grumblier. It's a two-model CRUD app with posts and comments. Down the road it'll have users too.
+Grumblr is like Tumblr, only grumblier. It's a two-model CRUD app with posts and comments.
 
 In the coming classes you're going to be interacting with data from an API that we provide. For this class, though, we'll just be hardcoding data and getting some views up and running.
 
 > Note: There's no reason this app uses CloudFlare for some dependencies and Google APIs for others. It'd probably be a better idea to use the same domain for all of them, just to be consistent.
 
+<!-- TODO: Review Modules, I-DO: setup our app's modules  -->
 # Our first module
 
-Modules -- not to be confused with *models* -- are the building block of Angular. Every Angular app is a collection of modules interacting with each other. They're kind of like Javascript objects, and kind of like gems, and kind of like models, and kind of like jQuery plug-ins.
+Modules -- not to be confused with *models* -- are the building block of Angular. Every Angular app is a collection of modules interacting with each other.
+
+> For more info on Modules in JS, check out this excellent [blog post](https://medium.freecodecamp.com/javascript-modules-a-beginner-s-guide-783f7d7a5fcc#.90a9th5jc)
 
 We're going to create out first module. It's not going to do anything for a bit. For the next part of this class, we're only going to focus on setting up modules.
 
@@ -81,6 +122,8 @@ The process of requiring dependencies in Angular is called **dependency injectio
 We get an error. In order to create a module you have to specify the number of dependencies it has, even if that number is zero.
 
 A `.module` with an array creates a new module; without an array it looks up an existing module of that name.
+
+<!-- ^ Getter vs Setter  -->
 
 ## Angular Errors
 
@@ -103,16 +146,24 @@ dependencies as the second argument.
 All Angular errors are like this. Full disclosure: having to click to another page to see the error messages is going to get annoying.
 
 Q. Open question: Why might the Angular developers have chosen to redirect you to these pages instead of giving you normal error messages?
+
 ---
+
 > My guesses:
 
-> Firstly, it's much easier to edit and update the error messages. Instead of having to release a new version of Angular to edit the message, they can just go edit the webpage.
+> 1. It's much easier to edit and update the error messages. Instead of having to release a new version of Angular to edit the message, they can just go edit the webpage.
 
-> Secondly, it lets them explain the error in greater depth. Angular is a little complicated, and it might take a lot of text to explain what's going on. So rather than write huge error messages, they redirect you to a webpage with full descriptions and examples.
+> 2. It lets them explain the error in greater depth. Angular is a little complicated, and it might take a lot of text to explain what's going on. So rather than write huge error messages, they redirect you to a webpage with full descriptions and examples.
+
+<!-- TODO: review what to axe  -->
+<!-- TODO: incorporate review question  -->
+<!-- Now that we've defined our modules, how can we make our app use them?   -->
 
 ## ng-app
 
 At this point Angular is "aware" of this module but isn't actually using it anywhere.
+
+<!-- Include the dependency again  -->
 
 To prove it, try changing the `ui.router` to some random word, like `zoboomafoo`. That's a module we clearly don't have, so you'd expect Angular to throw an error. It doesn't. That's because it's only "aware" of the module but hasn't actually turned it on.
 
@@ -138,6 +189,7 @@ Q. `data-ng-app` and `ng-app` do the exact same thing. Why add `data-`?
 
 You can only have **one** `data-ng-app` per page in Angular. Since that's the case, usually people put it in the `<html>` element. Add more `ng-app`s and it may not yell at you, but it'll defintely cause things to break.
 
+<!-- TODO: review what they know about module conventions already, intro style guide  -->
 ## Module style conventions
 
 We're still not going to make this module do anything yet. First, we're going to talk about the proper way to write a module. You'll just have to be content that the module isn't throwing errors.
@@ -148,9 +200,11 @@ https://github.com/johnpapa/angular-styleguide
 
 > John Papa has, I believe, no relation to Papa John's.
 
-The fact that this thing has 14,000 stars on Github should give you an idea of how well-respected and widely-used it is.
+The fact that this thing has almost 17,000 stars on Github should give you an idea of how well-respected and widely-used it is.
 
 As with all style conventions, the ones detailed in here won't impact the performance or functionality of your app at all. The purpose is just to make things easier to read and more standard for developers.
+
+<!-- TODO: sync to see what was covered about IIFE's already  -->
 
 ## IIFEs
 
@@ -181,6 +235,7 @@ Q. Why is `ui.router` off on its own line?
 
 Now for something weird: make the very first line of this file `"use strict";`. You may have seen this when Googling stuff. It looks like we're just writing a weird little random string here. What purpose can it possibly have?
 
+<!-- TODO: Axe this, provide high-level overview or link to example -->
 To find out, add this garden-variety `for` loop to the bottom of your `app.js`:
 
 ```js
@@ -194,10 +249,13 @@ for(i = 0; i < array.length; i++){
 
 Take 3 minutes to compare what happens now to what happens when you delete the `use strict` line. Google it for more information.
 
+---
+
 ### Basically...
 
 `"use strict"` forces you to write better Javascript. The big thing here is that it forces you to not use a variable without first declaring it. [There are many other uses as well.](http://www.w3schools.com/js/js_strict.asp)
 
+<!-- TODO: could axe this section  -->
 ### Why declaring variables is important
 
 To demonstrate why this is important, remove the `"use strict";` line. For instructional purposes only, I'm going to rename the `i` variable to something more visually interesting -- `potatoSack`, in this case:
@@ -217,11 +275,14 @@ When you don't use `var` Javascript attaches the variable to the top-most object
 
 With all our ducks in a row, we're now ready to make this module actually do something.
 
-# Making this module actually do something
+## Making this module actually do something
 
-We're going to configure this app to have routes to multiple views: a view for the Grumbles index, and a Grumbles show page.
+We're going to configure this app to have routes to multiple views:
+- A view for all `grumbles`, an index page
+- A view for a single `grumble`, a show page
 
-Remember in Express we had a `config/routes.js` file with all of the routes defined in it. Here, we put the `routes` inside a `config` module.
+
+Remember in Rails we had a `config/routes.rb` file with all of the routes defined in it. Here, we put the `routes` inside a `config` module.
 
 Add `.config` to your `app.js`:
 
@@ -245,7 +306,9 @@ You'll notice `$stateProvider` is in quotes. You'll also notice that if you refr
 
 The `ui.router` module we're requiring includes factories, services, providers, and more. We're not going to talk about the differences between those for now. Just know that `$stateProvider` is something `ui.router` gives us to manage **states**.
 
-A state in Angular is basically a route: it's an umbrella term for a URL, the view associated with it, and any controllers used in that view.
+<!-- TODO: elaborate on state  -->
+
+A **state** in Angular is basically a route: it's an umbrella term for a URL, the view associated with it, and any controllers used in that view.
 
 ## Config needs functions
 
@@ -267,7 +330,7 @@ Here's how we're going to add the function:
   ]);
 
   function RouterFunction($stateProvider){
-    
+
   }
 }());
 ```
@@ -307,6 +370,8 @@ Q. So why do we do it with the named function? Why not an anonymous function? (H
 
 `RouterFunction` doesn't have to be called `RouterFunction`; it could be called `wombatsAnonymous`. We just named it that because that's what it is: a function that does routing.
 
+<!-- TODO: Change language to I-Do, reminder to close laptops  -->
+
 ## Defining states
 
 Modify the RouterFunction to look like this:
@@ -321,13 +386,18 @@ function RouterFunction($stateProvider){
 }
 ```
 
-We've just defined the first **state**. Remember I said earlier that a state is a lot like a route in Rails or Express: it's a URL, often with an associated view and controller.
+We've just defined the first **state**. Remember I said earlier that a state is a lot like a route in Rails: it's a URL, often with an associated view and controller.
 
-In your browser, go to `index.html#/grumbles`. (We'll talk about that weird hashmark in a second.) You shouldn't see anything.
+<!-- TODO: More I-Do language  -->
+In your browser, go to `http://localhost:8080/#/grumbles`. (We'll talk about that weird hashmark in a second.)
+
+.....and we shouldn't see anything.
 
 ## ui-view
 
-That's because we haven't told Angular where to "insert" the view in the main page. We need something like `{{{body}}}` in Handlebars, or `<%= yield %>` in Rails. Add the `ui-view` directive to your `index.html`:
+That's because we haven't told Angular where to "insert" the view in the main page. We need something like `<%= yield %>` in Rails.
+
+ Add the `ui-view` directive to your `index.html`:
 
 ```html
 <body>
@@ -336,13 +406,13 @@ That's because we haven't told Angular where to "insert" the view in the main pa
 </body>
 ```
 
-`index.html` is now like a `layout.hbs` or `layout.html.erb` file. 
+`index.html` is now like the `application.html.erb` file we had in Rails.
 
-Note that you may see `ng-view` a lot in Angular documentation. This is used with the `ngRoute` module, which is the original built-in router included with Angular. Although it's still supported, Angular itself recommends you use `uiRouter`. They do the same thing -- `uiRouter` is just better.
+> **Note** that you may see `ng-view` a lot in Angular documentation. This is used with the `ngRoute` module, which is the original built-in router included with Angular. Although it's still supported, Angular itself recommends you use `uiRouter`. They do the same thing -- `uiRouter` is just better.
 
 ## Templates and Routes
 
-Now you should see "I'm the Grumbles index!" show up! You could put HTML in that `template` as well.
+Now if we refresh the page in our browser, we should see "I'm the Grumbles index!" show up! We could put HTML in that `template` as well.
 
 The `/grumbles` comes from the `url` we defined. Change it to `/wombat` and now you'd need to go to `#/wombat`.
 
@@ -352,7 +422,7 @@ Q. Where does the `#` come from?
 
 ## Templates
 
-Writing a huge string of HTML inside that `template` parameter would be annoying. There's a second option: `templateUrl`. You can have Angular load and insert whole HTML files for you -- just like with *partials* in Rails and Express.
+Writing a huge string of HTML inside that `template` parameter would be annoying. There's a second option: `templateUrl`. You can have Angular load and insert whole HTML files for you -- just like with *partials* in Rails.
 
 Let's create a folder in which we can put some partials:
 
@@ -379,9 +449,15 @@ function RouterFunction($stateProvider){
 }
 ```
 
-Bam! Now you have an easy way of using partials and never again having to write huge swaths of HTML in a Javascript file. You will virtually never use `template`; always `templateUrl`.
+Bam! Now you have an easy way of using partials and never again having to write huge swaths of HTML in a Javascript file.
+
+**Note**: You will virtually never use `template`; always `templateUrl`.
+
+<!-- TODO: Add You-Do: Index  -->
 
 ## Moar States
+
+<!-- I-Do: "Show"  -->
 
 We'll create one more state: a `show` page. Do this by chaining an additional `.state` onto the earlier one:
 
@@ -399,13 +475,18 @@ function RouterFunction($stateProvider){
 }
 ```
 
-Note: **We can use URL parameters** in Angular the exact same way we did in Rails and Express! The URL parameter in this case is `:id`. It behaves just like in the other frameworks.
+Note: **We can use URL parameters** in Angular the exact same way we did in Rails! The URL parameter in this case is `:id`. It behaves just like in other frameworks.
 
 Create a `show.html` page as well.
+
+<!-- TODO: Review stopping point here: Maybe a you-do to get them caught up  -->
+
 
 # Modularity
 
 Before we continue, we're going to create a new module, called `grumbles`, that represents the grumbles themselves -- whereas the `grumblr` module represents the whole app. This `grumbles` module is going to contain all of the code and logic specific to individual grumbles -- creating, saving, updating, displaying, and so on -- whereas the `grumblr` module will contain the code necessary to run the app at a high level.
+
+<!-- TODO: question STWG: WHY do this? -->
 
 ```
 $ touch js/grumbles/grumbles.module.js
@@ -426,7 +507,9 @@ All we're going to put into that file is this:
 
 That is: we're only going to create the module. We don't have a need to do more to it. But it's still good practice.
 
-Now that module needs to be dependency-injected into the main Grumblr module:
+<!-- Q: Now that we've defined the module, what do we need to do?  -->
+<!-- Two things:  -->
+1. Now That module needs to be dependency-injected into the main `grumblr` module:
 
 ```
 angular
@@ -436,14 +519,18 @@ angular
 ])
 ```
 
-...and needs to be required in the main `index.html`:
+2. ...and needs to be required in the main `index.html`:
 
 ```html
 <script src="js/app.js"></script>
 <script src="js/grumbles/grumbles.module.js"></script>
 ```
 
-# Controllers
+<!-- TODO: For the love of god a break?  -->
+
+## Break
+
+## Controllers
 
 The progression that we're following for creating this app is the same that I would follow for creating a "real" app: creating some routes is an easy win, so I'll do those first and test out the URLs. Then I'll worry about what we're going to do next: putting in data.
 
@@ -451,11 +538,13 @@ Q. In Rails, what do we call the thing that controls which data should be availa
 ---
 > A controller.
 
-A controller in Angular is similar: it's where we control which data is available on the view. However, Rails and Express controllers usually contained the logic for a bunch of routes -- that is, a bunch of **actions**. In Angular, it's considered good style to have **one controller for one action**.
+A controller in Angular is similar: it's where we control which data is available on the view. However, Rails controllers usually contained the logic for a bunch of routes -- that is, a bunch of **actions**. In Angular, it's considered good style to have **one controller for one action**.
 
 Q. If I've defined the `show` and `index` actions, how many controllers should I have?
 ---
 > Two controllers: one for each action.
+
+<!-- TODO: I-Do: index controller, you-do: index controller -->
 
 We're just going to make one controller for now: the `index` controller:
 
@@ -463,9 +552,9 @@ We're just going to make one controller for now: the `index` controller:
 $ touch js/grumbles/index.controller.js
 ```
 
-This naming convention is used because it puts the `index` controller alphabetically right next to the `index` view. Since each view is going to have a controller, we're not going to put all the controllers together the way we would in Rails or Express: that would result in a lot of jumping around from file-to-file.
+This naming convention is used because it puts the `index` controller alphabetically right next to the `index` view. Since each view is going to have a controller, we're not going to put all the controllers together the way we would in Rails: that would result in a lot of jumping around from file-to-file.
 
-Replace the contents of that controller file with this:
+In our `index controller`, let's add the following code:
 
 ```js
 "use strict";
@@ -483,7 +572,7 @@ Replace the contents of that controller file with this:
 }());
 ```
 
-> Note: `GrumbleIndexControllerFunction` is a super-long function name. A better name might be just `ControllerFunction`. We just used this long name to be a little more explicit for instructional purposes.
+> **Note**: `GrumbleIndexControllerFunction` is a super-long function name. A better name might be just `ControllerFunction`. We just used this long name to be a little more explicit for instructional purposes.
 
 Then, in the app's **main** `index.html`, include the controller file right below `grumbles.module.js`:
 
@@ -494,12 +583,17 @@ Then, in the app's **main** `index.html`, include the controller file right belo
 ```
 
 Q. Why isn't there an array in this `.module`?
+
 ---
+
 > Because the `grumbles` has already been created; we're adding something *to* the module. Angular thinks any `.module` with an array in it is creating a new module.
 
+<!-- Referencing a module, vs defining a module -->
 
 Q. This controller isn't doing anything yet. How can I tell?
+
 ---
+
 > I'd see "I'm in the controller!" console logged.
 
 To activate this controller, we need to tell the router that it should use this controller for the `index` state / route:
@@ -521,13 +615,18 @@ function RouterFunction($stateProvider){
 
 Now you should see that console logging.
 
+<!-- You-Do: Define `GrumbleIndexController` -->
+
 ## Instantiation
+
+<!-- Introduce in the context of the VM  -->
+<!-- We've defined and wired our app together, but how can we get data to display in our view? -->
 
 What's actually going on here is Angular is running `new GrumbleIndexController()`; that is, it's creating a new instance of that object.
 
 You can see that this can be used to make things happen, like console logging. But console logging isn't really the point of controllers. The point is to pass data to the view.
 
-For this case, let's try to make a variable called `grumble` available in the view. We have an instance of `GrumbleInstanceController`, and want to give it a `grumble` property.
+For this case, let's try to make a variable called `grumbles` available in the view. We have an instance of `GrumbleInstanceController`, and want to give it a `grumbles` property.
 
 Q. How do you give an instance of a Javascript object a property from inside its constructor function?
 ---
@@ -563,7 +662,6 @@ Q. Why am I calling this `ViewModel`?
 ---
 > A viewmodel is the Angular term for an instance of a controller. It's an interface between a view and a model.
 
-
 This is short for "Save this instance of the **controller as**..."
 
 Now, add to your `grumbles/index.html`:
@@ -573,7 +671,10 @@ Now, add to your `grumbles/index.html`:
 {{GrumbleIndexViewModel.grumbles}}
 ```
 
-Refresh, and you should see the text show up!
+Refresh, and we should see the text show up!
+
+<!-- YOU-Do: Index Controller  -->
+
 
 ## Faking data
 
@@ -587,14 +688,14 @@ Before `<script src="js/app.js">`, add this:
 
 ```html
     <script>
-var grumbles = [
-  {
-    title: "I am Grumble One"
-  },
-  {
-    title: "I'm another Grumble"
-  }
-]
+      var grumbles = [
+        {
+          title: "I am Grumble One"
+        },
+        {
+          title: "I'm another Grumble"
+        }
+      ]
     </script>
     <script src="js/app.js"></script>
 ```
@@ -607,15 +708,19 @@ function GrumbleIndexControllerFunction(){
 }
 ```
 
-Let's see it in `grumbles/index.html`:
+Now, moving back to our view in  `grumbles/index.html`:
 
 ```html
 <h2>I'm the Grumbles index!</h2>
 {{GrumbleIndexViewModel.grumbles}}
 ```
 
+Instead of printing out the literal data, we want to grab each individual `grumbles`' name...
+
 Q. What Angular directive will we use to loop through the grumbles and print them out individually?
+
 ---
+
 > ng-repeat
 
 ```html
@@ -626,7 +731,9 @@ Q. What Angular directive will we use to loop through the grumbles and print the
 
 This is a lot like `.each` in Rails: it's looping trough the `grumbles` array and saving each one as a variable called `grumble` whose properties we can now access.
 
-We have some semblance of an index page; let's head toward show pages for each grumble.
+We have some semblance of an `index` page; let's head toward `show` pages for each `grumble`.
+
+<!-- TODO: add YOU-DO to get hard coded index -->
 
 ## ui-sref
 
@@ -639,14 +746,14 @@ Before we make the show pages themselves, we're going to create some links to th
 </div>
 ```
 
-Q. What does `sref` stand for? Where have we seen `grumbleshow` before?
+Q. What does `sref` stand for? Where have we seen `grumbleShow` before?
 ---
 > It stands for "state".
 
 
 We're referring to one of the states defined earlier in the router. This little `sref` thing checks whether or not a state exists, and if it does, it returns the URL for it. If that URL has parameters -- `:id` in this case -- you can supply a value for that parameter and it'll add it into the appropriate place in the URL.
 
-This is cool because I can change the router all sorts of ways and `ui-sref` will still provide the correct URL. 
+This is cool because I can change the router all sorts of ways and `ui-sref` will still provide the correct URL.
 
 ## $index
 
@@ -676,6 +783,8 @@ Q. How would we make the main `Grumblr` header at the top into a link to the ind
 **This is the point at which tomorrow's lesson plan is going to start.** At this point you'll start pulling in actual API data instead of hardcoded stuff. However, to get some more repetition in playing around with the different pieces of Angular, we'd like you to add in a `show` route, and eventually full CRUD, still using hardcoded data.
 
 Bear in mind, though, that this means you won't be re-using the code you wrote tonight -- so don't get too attached to it. Its purpose is to be a playground for repetition.
+
+---
 
 #### Follow the rest of the lesson plan yourself to implement the rest of Grumblr.
 
@@ -832,6 +941,9 @@ this.create = function(){
 Take these snippets and incorporate them into your Grumblr in the appropriate way. Then, work on updating and deleting grumbles.
 
 [The solution code is available here.](https://github.com/ga-dc/grumblr_angular/tree/ui-router-solution)
+
+<!-- TODO: $state.go  -->
+
 
 # Quiz Questions
 
