@@ -17,7 +17,7 @@
 
 ## Framing (15 / 15)
 
-So far we've been learning about Angular and its awesome power as front-end framework to allow us to easily build Single Page Apps.  
+So far we've been learning about Angular and its awesome power as front-end framework that allows us to easily build Single Page Apps.  
 
 **Q**: What are some of the characteristics of SPAs?
 
@@ -57,8 +57,6 @@ Today, we are going to build off of what we learned in the intro class, and cons
 
 To start, let's fork the `grumblr_angular` [repo](https://github.com/ga-wdi-exercises/grumblr_angular), then clone down locally
 
-<!-- Reveal solution: Talk about Medium picture: How is UI Router interfacing with our app  -->
-
 We can get today's **starter** code by checking out a new branch:
     ```
     $ git checkout -b ui-router 1.0.0
@@ -80,14 +78,13 @@ In the coming classes you're going to be interacting with data from an API that 
 
 > Note: There's no reason this app uses CloudFlare for some dependencies and Google APIs for others. It'd probably be a better idea to use the same domain for all of them, just to be consistent.
 
-
 ## (I-Do) Our First Module (30 / 50)
 
 Modules -- not to be confused with *models* -- are the building block of Angular. Every Angular app is a collection of modules interacting with each other.
 
 > For more info on Modules in JS, check out this excellent [blog post](https://medium.freecodecamp.com/javascript-modules-a-beginner-s-guide-783f7d7a5fcc#.90a9th5jc)
 
-We're going to build out first module. It's not going to do anything for a bit. For the next part of this class, we're only going to focus on setting up modules.
+We're going to build out our first module. It's not going to do anything for a bit. For the next part of this class, we're only going to focus on setting up modules.
 
 Notice there's an `app.js` linked in this `index.html`.  Let's open it and add this line:
 
@@ -417,7 +414,7 @@ Bam! Now you have an easy way of using partials and never again having to write 
 - Inside of that directory, add a template for the `index` view
 - In your `app.js`, define a `grumbleIndex` state by specifying the associated url and template to render
 
-## Moar States (15 / 105)
+## Moar States (10 / 100)
 
 In our application we want to be able to view info about one `grumble`, so let's add a another state for our `show` page.
 
@@ -453,7 +450,7 @@ Before we continue, we're going to create a new module, called `grumbles`, that 
 $ touch js/grumbles/grumbles.module.js
 ```
 
-**(STWG)Q**: WHY do this?
+**Q**: WHY do this?
 
 ---
 
@@ -495,7 +492,7 @@ angular
 <script src="js/grumbles/grumbles.module.js"></script>
 ```
 
-## (You-Do) Define a `grumbles` Module (10 / 125)
+## (You-Do) Define a `grumbles` Module (5 / 105)
 
 - Create a new file for your `grumbles` module
 - Add a definition for this module
@@ -503,9 +500,9 @@ angular
 - Add the module you just defined as a dependency into your app's main module
 - Link to the module you just defined in you main `index.html`
 
-## Break (5 / 130)
+## Break (5 / 110)
 
-## Controllers (10 / 140)
+## Controllers (10 / 120)
 
 The progression that we're following for creating this app is the same that we would follow for creating a "real" app: creating some routes is an easy win, so we'll do those first and test out the URLs. Then we'll worry about what we're going to do next: putting in data.
 
@@ -523,7 +520,7 @@ A controller in Angular is similar: it's where we control which data is availabl
 
 > A: Two controllers: one for each action.
 
-### (I-Do) Index Controller
+### (I-Do) Index Controller (5 / 125)
 
 We're just going to make one controller for now: the `index` controller:
 
@@ -592,7 +589,7 @@ function RouterFunction($stateProvider){
 
 Now you should see that console logging.
 
-## (You-Do) Define an `Index` Controller (5 / 145)
+## (You-Do) Define an `Index` Controller (5 / 130)
 
 - Create a file for your `index` controller
 - Reference your `grumbles` module, and add a new controller definition called `GrumbleIndexController`
@@ -600,7 +597,7 @@ Now you should see that console logging.
 - Define a function to serve as your `index` controller function
 - Modify your `grumbleIndex` state definition to link to the appropriate controller for that state
 
-## Instantiation (10 / 155)
+## Instantiation (10 / 140)
 
 So far, we've defined and wired our app together, but how can we get data to display in our view?
 
@@ -665,7 +662,7 @@ Now, add to our `grumbles/index.html`:
 
 Refresh, and we should see the text show up!
 
-## Faking data (5 / 160)
+## Faking data (5 / 145)
 
 Let's make this index more index-y so that it shows multiple grumbles.
 
@@ -722,14 +719,14 @@ This is a lot like `.each` in Rails: it's looping trough the `grumbles` array an
 
 We have some semblance of an `index` page; let's head toward `show` pages for each `grumble`.
 
-## (You-Do) Display Data in the View From our Index Controller (10 / 170)
+## (You-Do) Display Data in the Index View (5 / 150)
 
 - Define a global variable called `grumbles` in your main `index.html` that is an array of objects with a `title` property
 - Attach a property inside the controller function's definition called `grumbles` equal to the global variable you defined before
 - Update your `grumbleIndex` state definition to specify what the instance of the controller should be called
 - In your `index` view, make each individual `grumble`'s `title` display by accessing the property you defined on the instance of your controller, or viewmodel
 
-## ui-sref (5 / 175)
+### `ui-sref`
 
 Before we make the show pages themselves, we're going to create some links to them.
 
@@ -746,12 +743,11 @@ Q. What does `sref` stand for? Where have we seen `grumbleShow` before?
 
 > It stands for "state".
 
-
 We're referring to one of the states defined earlier in the router. This little `sref` thing checks whether or not a state exists, and if it does, it returns the URL for it. If that URL has parameters -- `:id` in this case -- you can supply a value for that parameter and it'll add it into the appropriate place in the URL.
 
 This is cool because I can change the router all sorts of ways and `ui-sref` will still provide the correct URL.
 
-## $index (5 / 180)
+### `$index`
 
 Obviously we don't want to hardcode the ID. The problem is, these grumbles don't actually have IDs -- they're just items in an array.
 
@@ -777,6 +773,35 @@ Now you can see the URL of each grumble reflects its index in the global array o
 ---
 
 > A: `<h1><a data-ui-sref="grumbleIndex">Grumblr</a></h1>`
+
+### [`$state`](http://angular-ui.github.io/ui-router/site/#/api/ui.router.state.$state)
+
+uiRouter also comes out of the box with `$state`, a service responsible for representing states as well as transitioning between them. It also provides interfaces to ask for current state or even states you're coming from.
+
+We can call methods on `$state` to interact with our applications state, as well as trigger which state is active.
+
+For example, the closets thing Angular has to a redirect, like we had in Rails, is by using the `.go` method and passing in the name of a state like so:
+
+```js
+"use strict";
+
+(function(){
+  angular
+  .module("grumbles")
+  .controller("GrumbleIndexController", [
+    '$state',
+    GrumbleIndexControllerFunction
+  ]);
+
+  function GrumbleIndexControllerFunction($state){
+    this.goToIndex = function(){
+      $state.go("grumbleIndex")
+    }
+  }
+}());
+```
+
+Important to note, `$state` needs to be added as a dependency, and passed into the function we are going to use it in.  This is most commonly used in controller methods that do back-end data handling such as `create` and `update`, when we to "redirect", or take the user back to a different view.
 
 ## If time allows:
 
@@ -884,7 +909,9 @@ This data won't persist since we're not hooked up to a database: refresh the pag
 But being able to CRD grumbles, even if they just exist until you next refresh the page, will be really useful in doing it for realzies later on!
 
 Q. Why are we just doing CRD? Where's the `U`?
+
 ---
+
 > Thanks to two-way data binding, an "update" button is unnecessary! The grumble is updated automatically as you type.
 
 To start, here's what you'll need to make "Create" work:
@@ -948,8 +975,6 @@ Remember that Angular is geared toward single-page apps. In the "real world", yo
 
 This can cause some bugs due to browser caching. You can mitigate these bugs in Chrome by disabling caching when you have the console open. [This Gif has instructions.](http://i.imgur.com/p2TZixz.gifv)
 
-<!-- TODO: $state.go  -->
-
 ## Sample Quiz Questions
 
 - What's the difference between `.module("myModule")` and `.module("myModule", [])`?
@@ -964,10 +989,12 @@ This can cause some bugs due to browser caching. You can mitigate these bugs in 
 - How many views should be managed by one controller?
 > Just one: one view, one controller.
 
-- What's the equivalent of `{{yield}}` or `<%= yield %>` in Angular?
+- What's the equivalent of `<%= yield %>` in Angular?
 > `data-ui-view`
 
 ## Further Reading
 
 - [Angular under the hood](angular_under_the_hood.md)
   - It was originally going to be part of this class, but is maybe a bit tangential -- although pretty cool if you want to get more into the guts of this thing!
+- [UI Router Official Resources](https://github.com/angular-ui/ui-router#resources)
+- [UI Router Docs](https://github.com/angular-ui/ui-router/wiki)
