@@ -58,9 +58,11 @@ Today, we are going to build off of what we learned in the intro class, and cons
 To start, let's fork the `grumblr_angular` [repo](https://github.com/ga-wdi-exercises/grumblr_angular), then clone down locally
 
 We can get today's **starter** code by checking out a new branch:
-    ```
-    $ git checkout -b ui-router 1.0.0
-    ```
+
+```
+$ git checkout -b ui-router 1.0.0
+```
+
 Let's start our server locally:
 
 ```
@@ -72,9 +74,9 @@ Now if you go to `localhost:8080` you should see your app.
 
 It's all terribly exciting: the word `Grumblr`, and that's pretty much it.
 
-Grumblr is like Tumblr, only grumblier. It's a two-model CRUD app with posts and comments.
+Grumblr is like Tumblr, only grumblier. Eventually, it will be a two-model CRUD app with posts and comments.
 
-In the coming classes you're going to be interacting with data from an API that we provide. For this class, though, we'll just be hardcoding data and getting some views up and running.
+In the coming classes you're going to be interacting with data from an API that we provide. For this class, though, we'll just be hard-coding data and getting some views up and running.
 
 > Note: There's no reason this app uses CloudFlare for some dependencies and Google APIs for others. It'd probably be a better idea to use the same domain for all of them, just to be consistent.
 
@@ -98,7 +100,7 @@ Here we've done two things: we've created a new module called `grumblr`, and we'
 
 The process of requiring dependencies in Angular is called **dependency injection**. It's an extremely important part of Angular since this framework is all about modules being dependent on other modules.
 
-#### Try removing that array altogether. What happens?
+What happens if we were to remove the Array all together?
 
 We get an error. In order to create a module we have to specify the number of dependencies it has, even if that number is zero.
 
