@@ -1,21 +1,20 @@
 # Angular and $uiRouter
 
-## Screencasts
+### Screencasts
 
 - Dec 15, 2015, (Robin)
   - [Part 1](https://youtu.be/FurQ9FGzJwk)
   - [Part 2](https://youtu.be/CtV0ULLlLf0)
 
-## Learning Objectives
+### Learning Objectives
 
-- Explain what dependency injection is and what problem it solves
 - Explain the purpose of templates in Angular
-- Create separate views and routes for each CRUD action
 - Use the `ui-view` directive to load angular templates
 - Use `$stateProvider` and `$state` to access query parameters and update the URL
 - Define multiple controllers in a single module
+- Compare '$state' to '$scope'
 
-## Framing (15 / 15)
+### Framing (15 / 15)
 
 So far we've been learning about Angular and its awesome power as front-end framework that allows us to easily build Single Page Apps.  
 
@@ -33,7 +32,9 @@ Take 1 minute to brainstorm any potential problems with SPAs. Then take another 
 
 Many of the common problems with SPAs have to do with the question of how to manage an application's state. This is most evident with issues related to **bookmarking** and **deep linking**.
 
-### Application State Exemplified
+# Application State
+
+### Real world example: Trello
 
 In order to get a better grasp of what we mean by an app's state, let take a look at a prolific SPA in the wild, [Trello](https://trello.com/).
 
@@ -41,7 +42,9 @@ Trello is a productivity management tool, that allows a user to have many differ
 
 Let's play around with a board, and see what happens to the url when we interact with the app.
 
-## [UI Router](https://github.com/angular-ui/ui-router) to the Rescue
+- **Note** - Changes to the url by default do not alter the app state. Developers had to explicitly connect the 'application state' to the url, so that when things in the app change the changes are reflected in the url.
+
+### [UI Router](https://github.com/angular-ui/ui-router) to the Rescue
 
 Today, we are going to be looking at one wildly popular solution in Angular to help address the problems we've uncovered with SPAs.
 
@@ -49,11 +52,14 @@ Specifically, Angular UI-Router is a client-side SPA routing framework that upda
 
 As a result, this allows changes to the browser's URL to drive navigation through the app, thus allowing the user to create a bookmark to a location deep within the SPA.
 
-## Let's Build an Angular App
+- 'state' of angular app - application state
+- state in ui-router
+
+# Let's Build an Angular App
 
 Today, we are going to build off of what we learned in the intro class, and construct an app from scratch utilizing `uiRouter`. We're going to look at how we can build a SPA with multiple views and controllers.
 
-## Getting set up (5 / 20)
+### Getting set up (5 / 20)
 
 To start, let's fork the `grumblr_angular` [repo](https://github.com/ga-wdi-exercises/grumblr_angular), then clone down locally
 
@@ -80,7 +86,7 @@ In the coming classes you're going to be interacting with data from an API that 
 
 > Note: There's no reason this app uses CloudFlare for some dependencies and Google APIs for others. It'd probably be a better idea to use the same domain for all of them, just to be consistent.
 
-## (I-Do) Our First Module (30 / 50)
+## Modules - I do (30 / 50)
 
 Modules -- not to be confused with *models* -- are the building block of Angular. Every Angular app is a collection of modules interacting with each other.
 
@@ -91,12 +97,12 @@ We're going to build out our first module. It's not going to do anything for a b
 Notice there's an `app.js` linked in this `index.html`.  Let's open it and add this line:
 
 ```js
-angular.module("grumblr", ["ui.router"]);
+angular.module("app", ["ui.router"]);
 ```
 
-Here we've done two things: we've created a new module called `grumblr`, and we've told it to require another module called `ui.router`. What we see in the array brackets is Angular's way of "requiring" modules.
+Here we've done two things: we've created a new module called `app`, and we've told it to require another module called `ui.router`. What we see in the array brackets is Angular's way of "requiring" modules.
 
-## Dependency Injection
+#### Dependency Injection
 
 The process of requiring dependencies in Angular is called **dependency injection**. It's an extremely important part of Angular since this framework is all about modules being dependent on other modules.
 
@@ -106,7 +112,7 @@ We get an error. In order to create a module we have to specify the number of de
 
 A `.module` with an array creates a new module; without an array it looks up an existing module of that name.
 
-## Angular Errors
+#### Angular Errors
 
 ```
 Uncaught Error: [$injector:nomod] http://errors.angularjs.org/1.3.15/$injector/nomod?p0=grumblr
@@ -119,7 +125,7 @@ This will take us to one of the error pages on `angularjs.org`. In this case, it
 ```text
 Error: $injector:nomod
 Module Unavailable
-Module 'grumblr' is not available! We either misspelled the module name
+Module 'app' is not available! We either misspelled the module name
 or forgot to load it. If registering a module ensure that you specify the
 dependencies as the second argument.
 ```
@@ -150,7 +156,7 @@ To prove it, try changing the `ui.router` to some random word, like `zoboomafoo`
 To "require" the module, change the `html` tag in our `index.html` to look like this:
 
 ```html
-<html data-ng-app="grumblr">
+<html data-ng-app="app">
 ```
 
 If we refresh the page we should see a whole lot of nothing.
@@ -173,7 +179,7 @@ Q. `data-ng-app` and `ng-app` do the exact same thing. Why add `data-`?
 
 We can only have **one** `data-ng-app` per page in Angular. Since that's the case, usually people put it in the `<html>` element. Add more `ng-app`s and it may not yell at us, but it'll definitely cause things to break.
 
-## Module style conventions
+### Module style conventions
 
 We're still not going to make this module do anything yet. First, we're going to talk about the proper way to write a module. You'll just have to be content that the module isn't throwing errors.
 
@@ -187,7 +193,7 @@ The fact that this thing has almost 17,000 stars on Github should give you an id
 
 As with all style conventions, the ones detailed in here won't impact the performance or functionality of our app at all. The purpose is just to make things easier to read and more standard for developers.
 
-## IIFEs
+### IIFEs
 
 The "correct" way to write a module is to wrap the whole thing in an IIFE, or an **immediately-invoked function expression**.
 
@@ -202,7 +208,7 @@ To use this convention, rewrite our `app.js` to look like the following:
 ```js
 (function (){
   angular
-  .module("grumblr", [
+  .module("app", [
     "ui.router"
   ]);
 })();
@@ -224,7 +230,7 @@ Basically, `"use strict"` forces us to write better Javascript. The big thing he
 
 With all our ducks in a row, we're now ready to make this module actually do something.
 
-## Making this module actually do something
+# Making this module actually do something
 
 We're going to configure this app to have routes to multiple views:
 
@@ -240,7 +246,7 @@ Let's add `.config` to our `app.js`:
 
 (function(){
   angular
-  .module("grumblr", [
+  .module("app", [
     "ui.router"
   ])
   .config([
@@ -268,7 +274,7 @@ Here's how we're going to add the function:
 
 (function(){
   angular
-  .module("grumblr", [
+  .module("app", [
     "ui.router"
   ])
   .config([
@@ -293,11 +299,12 @@ Two weird things here:
 **Weird thing number 2:** What's up with this `RouterFunction`? It only gets called once; why not just do something like:
 
 ```js
+// * avoid */
 "use strict";
 
 (function(){
   angular
-  .module("grumblr", [
+  .module("app", [
     "ui.router"
   ])
   .config([
@@ -319,9 +326,9 @@ That works the exact same way.
 
 `RouterFunction` doesn't have to be called `RouterFunction`; it could be called `wombatsAnonymous`. We just named it that because that's what it is: a function that does routing.
 
-## (You-Do) Setup and Config First Module (10 / 60)
+## Setup and Config First Module - You-do(10 / 60)
 
-- In `app.js`: Define a module called `grumblr`, make sure to include any dependencies
+- In `app.js`: Define a module called `app`, make sure to include any dependencies
 - Configure the module you just created, by adding a function that will serve as your `RouterFunction`
   - Make sure to inject `$stateProvider`, and pass it in as an argument to your function
 - Make you app "active" by including the necessary directive that links with you app's "main" module
@@ -446,7 +453,9 @@ $ touch js/grumbles/show.html
 
 ### Modularity
 
-Before we continue, we're going to create a new module, called `grumbles`, that represents all components relating to the grumbles themselves -- whereas the `grumblr` module represents the whole app. This `grumbles` module is going to contain all of the code and logic specific to individual grumbles -- creating, saving, updating, displaying, and so on -- whereas the `grumblr` module will contain the code necessary to run the app at a high level.
+Before we continue, we're going to create a new module, called `app.grumbles`, that represents all components relating to the grumbles themselves -- whereas the `app` module represents the whole app.
+- `app` module will contain the code necessary to run the app at a high level.
+- `app.grumbles` module is going to contain all of the code and logic specific to individual grumbles -- creating, saving, updating, displaying, and so on
 
 ```
 $ touch js/grumbles/grumbles.module.js
@@ -465,7 +474,7 @@ All we're going to put into that file is this:
 
 (function(){
   angular
-  .module("grumbles", []);
+  .module("app.grumbles", []);
 }());
 ```
 
@@ -477,13 +486,13 @@ That is: we're only going to create the module. We don't have a need to do more 
 
 > Two things:
 
-1. That module needs to be dependency-injected into the main `grumblr` module:
+1. That module needs to be dependency-injected into the main `app` module:
 
 ```
 angular
 .module("grumblr", [
   "ui.router",
-  "grumbles"
+  "app.grumbles"
 ])
 ```
 
@@ -494,9 +503,9 @@ angular
 <script src="js/grumbles/grumbles.module.js"></script>
 ```
 
-## (You-Do) Define a `grumbles` Module (5 / 105)
+## Define a `grumbles` Module - You-Do (5 / 105)
 
-- Create a new file for your `grumbles` module
+- Create a new file for your `app.grumbles` module
 - Add a definition for this module
   - *Note* Are there any dependencies for this module?
 - Add the module you just defined as a dependency into your app's main module
@@ -539,7 +548,7 @@ In our `index controller`, let's add the following code:
 
 (function(){
   angular
-  .module("grumbles")
+  .module("app.grumbles")
   .controller("GrumbleIndexController", [
     GrumbleIndexControllerFunction
   ]);
@@ -552,7 +561,7 @@ In our `index controller`, let's add the following code:
 
 > **Note**: `GrumbleIndexControllerFunction` is a super-long function name. A better name might be just `ControllerFunction`. We just used this long name to be a little more explicit for instructional purposes.
 
-Then, in the app's **main** `index.html`, include the controller file right below `grumbles.module.js`:
+<!-- Then, in the app's **main** `index.html`, include the controller file right below `grumbles.module.js`: -->
 
 ```html
 <script src="js/app.js"></script>
@@ -594,7 +603,7 @@ Now you should see that console logging.
 ## (You-Do) Define an `Index` Controller (5 / 130)
 
 - Create a file for your `index` controller
-- Reference your `grumbles` module, and add a new controller definition called `GrumbleIndexController`
+- Reference your `app.grumbles` module, and add a new controller definition called `GrumbleIndexController`
   - Include any necessary dependencies
 - Define a function to serve as your `index` controller function
 - Modify your `grumbleIndex` state definition to link to the appropriate controller for that state
@@ -789,7 +798,7 @@ For example, the closets thing Angular has to a redirect, like we had in Rails, 
 
 (function(){
   angular
-  .module("grumbles")
+  .module("app.grumbles")
   .controller("GrumbleIndexController", [
     '$state',
     GrumbleIndexControllerFunction
@@ -841,7 +850,7 @@ To start the show controller, We're just going to copy the index controller. We'
 
 (function(){
   angular
-  .module("grumbles")
+  .module("app.grumbles")
   .controller("GrumbleShowController", [
     GrumbleShowControllerFunction
   ]);
@@ -872,7 +881,7 @@ Now we need a way of getting the ID from the URL. Angular makes this possible wi
 
 (function(){
   angular
-  .module("grumbles")
+  .module("app.grumbles")
   .controller("GrumbleShowController", [
     "$stateParams",
     GrumbleShowControllerFunction
