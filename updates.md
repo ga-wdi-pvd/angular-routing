@@ -267,3 +267,4 @@ This helps us help you! We'll review responses for each exit ticket and start to
   - It was originally going to be part of this class, but is maybe a bit tangential -- although pretty cool if you want to get more into the guts of this thing!
 - [UI Router Official Resources](https://github.com/angular-ui/ui-router#resources)
 - [UI Router Docs](https://github.com/angular-ui/ui-router/wiki)
+- [stackoverflow Angular scope - prototypical inheritance](http://stackoverflow.com/questions/14049480/what-are-the-nuances-of-scope-prototypal-prototypical-inheritance-in-angularjs)
