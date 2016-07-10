@@ -1,9 +1,38 @@
+---
+---
+
+<link rel='stylesheet' type='text/css' href='github-markdown.css'>
+<style>
+  .markdown-body{
+    padding:1em;
+  }
+  section {
+    display:none;
+  }
+  :target + section{
+    display:block;
+  }
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", function(){
+    var hTags = document.querySelectorAll("h1,h2");
+    [].forEach.call(hTags, function(hTag){
+      var link  = document.createElement("A");
+      link.href = "#" + hTag.id;
+      link.classList.add("nav");
+      link.textContent  = (hTag.textContent);
+      hTag.innerHTML    = link.outerHTML;
+    });
+  });
+</script>
+
+<div markdown='1' class='markdown-body'>
+
 # Grumblr Lab
 
-## Steps for completing the assignment:
+## Local Setup
 
-### Local Setup
-
+<section markdown="1">
 To start, let's fork the `grumblr_angular` [repo](https://github.com/ga-wdi-exercises/grumblr_angular), then clone down locally
 
 We can get today's **starter** code by checking out a new branch:
@@ -27,18 +56,43 @@ Grumblr is like Tumblr, only grumblier. Eventually, it will be a two-model CRUD 
 
 In the coming classes you're going to be interacting with data from an API that we provide. For this class, though, we'll just be hard-coding data and getting some views up and running.
 
-### Create a module for grumblr and inject `ui.router`
+</section>
+
+## Create a module for grumblr and inject `ui.router`
+
+<section markdown="1">
 
 ```js
+// app.js
 angular.module("grumblr", ["ui.router"]);
 ```
 
-### Configure `ui.router`, and define `Router` function
+</section>
+
+## Configure `ui.router`, and define `Router` function
+
+<section markdown="1">
 
 - Configure the module you just created, by adding a function that will serve as your `RouterFunction`
   - Make sure to inject `$stateProvider`, and pass it in as an argument to your function
 
-### Create Index Controller
+```js
+// app.js
+angular.module("grumblr", ["ui.router"])
+.config(["$stateProvider", Router])
+
+function Router($stateProvider){
+  console.log("working")
+}
+```
+
+Any errors?
+
+</section>
+
+## Create Index Controller
+
+<section markdown="1">
 
 We're just going to make one controller for now: the `index` controller:
 
@@ -51,29 +105,23 @@ This naming convention is used because it puts the `index` controller alphabetic
 In our `index controller`, let's add the following code:
 
 ```js
-"use strict";
+angular
+.module("grumblr")
+.controller("GrumbleIndexController", [
+  GrumbleIndexControllerFunction
+]);
 
-(function(){
-  angular
-  .module("grumbles")
-  .controller("GrumbleIndexController", [
-    GrumbleIndexControllerFunction
-  ]);
-
-  function GrumbleIndexControllerFunction(){
-    console.log("I'm in the controller!");
-  }
-}());
+function GrumbleIndexControllerFunction(){
+  console.log("I'm in the controller!");
+}
 ```
 
-### Create an element with `ui-view` in index.html
+</section>
 
-```html
-<!-- ./index.html -->
-<div ui-view></div>
-```
 
-### Use Index controller when url is `/grumbles`
+## Use Index controller when url is `/grumbles`
+
+<section markdown="1">
 
 ```js
 function RouterFunction($stateProvider){
@@ -86,7 +134,21 @@ function RouterFunction($stateProvider){
 }
 ```
 
-### Load Template when url is `/grumbles`
+</section>
+
+## Create an element with `ui-view` in index.html
+
+<section markdown="1">
+
+```html
+<!-- ./index.html -->
+<div ui-view></div>
+```
+</section>
+
+## Load Template when url is `/grumbles`
+
+<section markdown="1">
 
 We can have Angular load and insert whole HTML files for us -- just like with *partials* in Rails.
 
@@ -115,7 +177,11 @@ function RouterFunction($stateProvider){
 }
 ```
 
-### When visiting `/grumbles` in url:
+</section>
+
+## When visiting `/grumbles` in url:
+
+<section markdown="1">
 
 - You should see "I'm in the controller" logged to the console.
 - You should see "I'm the grumbles index" in the browser
@@ -129,8 +195,11 @@ Things to check:
 <script src="js/app.js"></script>
 <script src="js/grumbles/index.controller.js"></script>
 ```
+</section>
 
-### Load fake data into index controller
+## Load fake data into index controller
+
+<section markdown="1">
 
 Before `<script src="js/app.js">`, let's add this:
 
@@ -156,7 +225,11 @@ function GrumbleIndexControllerFunction(){
 }
 ```
 
-### Loop through data and display info about each grumble
+</section>
+
+## Loop through data and display info about each grumble
+
+<section markdown="1">
 
 ```html
 <div data-ng-repeat="grumble in GrumbleIndexViewModel.grumbles">
@@ -164,7 +237,11 @@ function GrumbleIndexControllerFunction(){
 </div>
 ```
 
-### Link to a show page
+</section>
+
+## Link to a show page
+
+<section markdown="1">
 
 Using `ui-sref`
 
@@ -181,9 +258,13 @@ Inside `ng-repeat`, you automatically have access to a variable called `$index`.
 </div>
 ```
 
-Now you can see the URL of each grumble reflects its index in the global array of grumbles.
+**We just invented `grumbleShow`** - define the state in the next section.
 
-### Show page for each grumble
+</section>
+
+## Show page for each grumble
+
+<section markdown="1">
 
 In our application we want to be able to view info about one `grumble`, so let's add a another state for our `show` page.
 
@@ -225,36 +306,6 @@ function RouterFunction($stateProvider){
   });
 }
 ```
-
-### [`$state`](http://angular-ui.github.io/ui-router/site/#/api/ui.router.state.$state)
-
-uiRouter also comes out of the box with `$state`, a service responsible for representing states as well as transitioning between them. It also provides interfaces to ask for current state or even states you're coming from.
-
-We can call methods on `$state` to interact with our applications state, as well as trigger which state is active.
-
-For example, the closets thing Angular has to a redirect, like we had in Rails, is by using the `.go` method and passing in the name of a state like so:
-
-```js
-"use strict";
-
-(function(){
-  angular
-  .module("grumbles")
-  .controller("GrumbleIndexController", [
-    '$state',
-    GrumbleIndexControllerFunction
-  ]);
-
-  function GrumbleIndexControllerFunction($state){
-    this.goToIndex = function(){
-      $state.go("grumbleIndex")
-    }
-  }
-}());
-```
-
-Important to note, `$state` needs to be added as a dependency, and passed into the function we are going to use it in.  This is most commonly used in controller methods that do back-end data handling such as `create` and `update`, when we to "redirect", or take the user back to a different view.
-
 
 ```
 $ touch js/grumbles/show.controller.js
@@ -410,3 +461,6 @@ That's because your `http-server` considers that to be a completely different ro
 Remember that Angular is geared toward single-page apps. In the "real world", you'd probably have the server redirect every page to `index.html`.
 
 This can cause some bugs due to browser caching. You can mitigate these bugs in Chrome by disabling caching when you have the console open. [This Gif has instructions.](http://i.imgur.com/p2TZixz.gifv)
+</section>
+
+</div>
