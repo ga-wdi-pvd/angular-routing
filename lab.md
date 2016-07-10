@@ -67,6 +67,13 @@ In the coming classes you're going to be interacting with data from an API that 
 angular.module("grumblr", ["ui.router"]);
 ```
 
+Add `ng-app` to index.html
+
+```html
+<!-- index.html -->
+<body ng-app='grumblr'>
+```
+
 </section>
 
 ## Configure `ui.router`, and define `Router` function
@@ -86,7 +93,7 @@ function Router($stateProvider){
 }
 ```
 
-Any errors?
+Refreshing the page should show "working" in the console.
 
 </section>
 
@@ -116,6 +123,13 @@ function GrumbleIndexControllerFunction(){
 }
 ```
 
+Link to this file in `index.html`
+
+```html
+<!-- after app.js -->
+<script src='js/grumbles/index.controller.js'></script>
+```
+
 </section>
 
 
@@ -124,15 +138,18 @@ function GrumbleIndexControllerFunction(){
 <section markdown="1">
 
 ```js
+// app.js
+
 function RouterFunction($stateProvider){
   $stateProvider
   .state("grumbleIndex", {
     url: "/grumbles",
-    controller: "IndexViewController",
-    controllerAs: "IndexViewModel"
+    controller: "GrumbleIndexController",
+    controllerAs: "GrumbleIndexViewModel"
   });
 }
 ```
+
 
 </section>
 
@@ -144,6 +161,10 @@ function RouterFunction($stateProvider){
 <!-- ./index.html -->
 <div ui-view></div>
 ```
+Visit: http://localhost:9000/#/grumbles
+
+You should see "I'm in the controller!" in the console.
+
 </section>
 
 ## Load Template when url is `/grumbles`
@@ -155,7 +176,6 @@ We can have Angular load and insert whole HTML files for us -- just like with *p
 Let's create a folder in which we can put some partials:
 
 ```
-$ mkdir js/grumbles
 $ touch js/grumbles/index.html
 ```
 
@@ -170,8 +190,8 @@ function RouterFunction($stateProvider){
   $stateProvider
   .state("grumbleIndex", {
     url: "/grumbles",
-    controller: "IndexViewController",
-    controllerAs: "IndexViewModel"
+    controller: "GrumbleIndexController",
+    controllerAs: "GrumbleIndexViewModel"
     templateUrl: "js/grumbles/index.html"
   });
 }
@@ -220,6 +240,8 @@ Before `<script src="js/app.js">`, let's add this:
 We can access this global variable in all the other files. Set `this.grumbles` equal to that variable in our controller:
 
 ```js
+// js/grumbles/index.controller.js
+
 function GrumbleIndexControllerFunction(){
   this.grumbles = grumbles;
 }
@@ -232,10 +254,13 @@ function GrumbleIndexControllerFunction(){
 <section markdown="1">
 
 ```html
+<!-- js/grumbles/index.html -->
 <div data-ng-repeat="grumble in GrumbleIndexViewModel.grumbles">
   <p>{{grumble.title}}</p>
 </div>
 ```
+
+You should see each of the grumbles when you refresh the page.
 
 </section>
 
@@ -271,42 +296,44 @@ In our application we want to be able to view info about one `grumble`, so let's
 To do this, we can chain an additional `.state` onto the earlier one:
 
 ```js
-function RouterFunction($stateProvider){
+function Router($stateProvider){
   $stateProvider
   .state("grumbleIndex", {
     url: "/grumbles",
+    controller: "GrumbleIndexController",
+    controllerAs: "GrumbleIndexViewModel",
     templateUrl: "js/grumbles/index.html"
   })
   .state("grumbleShow", {
     url: "/grumbles/:id",
+    controller: "GrumbleShowController",
+    controllerAs: "GrumbleShowViewModel",
     templateUrl: "js/grumbles/show.html"
   });
 }
 ```
 
-Now, we need to create a `show.html` page as well:
+</section>
+
+##  `show.html` page
+
+<section markdown="1">
 
 ```
 $ touch js/grumbles/show.html
 ```
 
-To activate this controller, we need to tell the router that it should use this controller for the `grumbleIndex` state:
-
-```js
-function RouterFunction($stateProvider){
-  $stateProvider
-  .state("grumbleIndex", {
-    url: "/grumbles",
-    templateUrl: "js/grumbles/index.html",
-    controller: "GrumbleIndexController"
-  })
-  .state("grumbleShow", {
-    url: "/grumbles/:id",
-    templateUrl: "js/grumbles/show.html"
-  });
-}
+```
+<!-- js/grumbles/show.html -->
+The show page
 ```
 
+</section>
+
+
+## Grumble Show Controller
+
+<section markdown="1">
 ```
 $ touch js/grumbles/show.controller.js
 ```
@@ -324,19 +351,15 @@ Be sure to include it in your main `index.html`:
 To start the show controller, We're just going to copy the index controller. We'll change `index` to `show`, and change `this.grumbles` to `this.grumble` since we're just showing one:
 
 ```js
-"use strict";
+angular
+.module("grumblr")
+.controller("GrumbleShowController", [
+  GrumbleShowControllerFunction
+]);
 
-(function(){
-  angular
-  .module("grumbles")
-  .controller("GrumbleShowController", [
-    GrumbleShowControllerFunction
-  ]);
-
-  function GrumbleShowControllerFunction(){
-    this.grumble = {}
-  }
-}());
+function GrumbleShowControllerFunction(){
+  this.grumble = {}
+}
 ```
 
 We'll update the router accordingly to reference the new controller:
@@ -349,26 +372,26 @@ We'll update the router accordingly to reference the new controller:
   controllerAs: "GrumbleShowViewModel"
 });
 ```
+</section>
 
-### `$stateParams`
+## Retrieve index from url with `$stateParams`
+
+<section markdown="1">
 
 Now we need a way of getting the ID from the URL. Angular makes this possible with a module called `$stateParams`, included with `ui.router`. We'll inject it into the controller the same way we injected into the router, and add a `console.log` so we can see what's in `$stateParams`:
 
 ```js
-"use strict";
+angular
+.module("grumblr")
+.controller("GrumbleShowController", [
+  "$stateParams",
+  GrumbleShowControllerFunction
+]);
 
-(function(){
-  angular
-  .module("grumbles")
-  .controller("GrumbleShowController", [
-    "$stateParams",
-    GrumbleShowControllerFunction
-  ]);
-
-  function GrumbleShowControllerFunction($stateParams){
-    console.log($stateParams);
-  }
-}());
+function GrumbleShowControllerFunction($stateParams){
+  console.log($stateParams);
+  this.grumble = {}
+}
 ```
 
 You can see that it's a small object containing the URL parameters (or the URL's one parameter, in this case).
@@ -380,14 +403,23 @@ function GrumbleShowControllerFunction($stateParams){
   this.grumble = grumbles[$stateParams.id];
 }
 ```
+</section>
 
-Finally, I'll put something in `show.html` to make this actually show up:
+## Show template
+
+<section markdown="1">
 
 ```html
 <h2>{{GrumbleShowViewModel.grumble.title}}</h2>
 ```
 
+You should see the grumble in the browser
+
+</section>
+
 ## Bonus
+
+<section markdown="1">
 
 ### You do: CRD Grumbles
 
