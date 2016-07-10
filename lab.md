@@ -1,7 +1,7 @@
 ---
 ---
 
-<link rel='stylesheet' type='text/css' href='github-markdown.css'>
+<link rel='stylesheet' type='text/css' href='http://wdidc.org/~jesse/css/github-markdown.css'>
 <style>
   .markdown-body{
     padding:1em;
