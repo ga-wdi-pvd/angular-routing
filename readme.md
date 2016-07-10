@@ -188,7 +188,7 @@ function stopLightController($state, $stateParams){
 ```
 ---
 
-## [You do: Grumblr](https://ga-wdi-lessons.github.io/angular-routing/lab.html)
+## [You do: Grumblr](http://ga-wdi-lessons.github.io/angular-routing/lab.html)
 
 ## Sample Quiz Questions
 
