@@ -73,7 +73,7 @@ Clicking on a bulb illuminates the correct color.
 angular.module("stoplight", ["ui.router"])
 ```
 
-Here we've done two things: we've created a new module called `grumblr`, and we've told it to require another module called `ui.router`. What we see in the array brackets is Angular's way of "requiring" modules.
+Here we've done two things: we've created a new module called `grumbles`, and we've told it to require another module called `ui.router`. What we see in the array brackets is Angular's way of "requiring" modules.
 
 ##### Dependency Injection
 

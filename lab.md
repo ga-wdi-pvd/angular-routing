@@ -54,8 +54,6 @@ It's all terribly exciting: the word `Grumblr`, and that's pretty much it.
 
 Grumblr is like Tumblr, only grumblier. Eventually, it will be a two-model CRUD app with posts and comments.
 
-In the coming classes you're going to be interacting with data from an API that we provide. For this class, though, we'll just be hard-coding data and getting some views up and running.
-
 </section>
 
 ## Create a module for grumblr and inject `ui.router`
@@ -256,7 +254,7 @@ function GrumbleIndexControllerFunction(){
 ```html
 <!-- js/grumbles/index.html -->
 <div data-ng-repeat="grumble in GrumbleIndexViewModel.grumbles">
-  <p>{{grumble.title}}</p>
+  <p>{% raw %}{{grumble.title}}{% endraw %}</p>
 </div>
 ```
 
@@ -410,7 +408,7 @@ function GrumbleShowControllerFunction($stateParams){
 <section markdown="1">
 
 ```html
-<h2>{{GrumbleShowViewModel.grumble.title}}</h2>
+<h2>{% raw %}{{GrumbleShowViewModel.grumble.title}}{% endraw %}</h2>
 ```
 
 You should see the grumble in the browser
