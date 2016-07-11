@@ -199,7 +199,7 @@ function stopLightController($state, $stateParams){
 
 ## Further Reading
 
-- [Angular under the hood](angular_under_the_hood.md)
+- [Angular under the hood](angular-under-the-hood.md)
   - It was originally going to be part of this class, but is maybe a bit tangential -- although pretty cool if you want to get more into the guts of this thing!
 - [UI Router Official Resources](https://github.com/angular-ui/ui-router#resources)
 - [UI Router Docs](https://github.com/angular-ui/ui-router/wiki)
