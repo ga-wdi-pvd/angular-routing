@@ -25,7 +25,7 @@
     });
     var copy = document.querySelector("[type='checkbox']")
     document.body.addEventListener("copy", function(e){
-      if(copy.value) e.preventDefault()
+      if(copy.checked) e.preventDefault()
     })
   });
 </script>
