@@ -73,8 +73,6 @@ Clicking on a bulb illuminates the correct color.
 angular.module("stoplight", ["ui.router"])
 ```
 
-Here we've done two things: we've created a new module called `grumbles`, and we've told it to require another module called `ui.router`. What we see in the array brackets is Angular's way of "requiring" modules.
-
 ##### Dependency Injection
 
 The process of requiring dependencies in Angular is called **dependency injection**. It's an extremely important part of Angular since this framework is all about modules being dependent on other modules.
@@ -103,11 +101,7 @@ function Router($stateProvider){
 }
 ```
 
-> **Note**: You'll notice `$stateProvider` is in quotes. You'll also notice that if we were to refresh the page, we'll get an error. That's OK -- we're going to talk about `$stateProvider` first and then we'll address the error.
-
 ###### `$stateProvider`
-
-The `ui.router` module we're requiring includes factories, services, providers, and more. We're not going to talk about the differences between those for now. Just know that `$stateProvider` is something `ui.router` gives us to manage **states**.
 
 A **state** in Angular is basically a route: it's an umbrella term for a URL, the view associated with it, and any controllers used in that view.
 
@@ -130,9 +124,7 @@ In our browser, let's visit `http://localhost:8080/#/red`. (We'll talk about tha
 
 ###### `ui-view`
 
-That's because we haven't told Angular where to "insert" the view in the main page. We need something like `<%= yield %>` in Rails.
-
-To fix this, let's replace the `ng-controller` with `ui-view`:
+Let's replace the `ng-controller` with `ui-view`:
 
 ```html
 <div ng-controller='stoplightController as vm'>
@@ -141,8 +133,6 @@ To fix this, let's replace the `ng-controller` with `ui-view`:
 ```
 
 `index.html` is now like the `application.html.erb` file we had in Rails.
-
-> **Note** that you may see `ng-view` a lot in Angular documentation. This is used with the `ngRoute` module, which is the original built-in router included with Angular. Although it's still supported, Angular itself recommends you use `uiRouter`. They do the same thing -- `uiRouter` is just better.
 
 ###### Let the state choose the controller
 

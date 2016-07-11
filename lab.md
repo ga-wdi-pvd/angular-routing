@@ -222,17 +222,17 @@ Things to check:
 Before `<script src="js/app.js">`, let's add this:
 
 ```html
-    <script>
-      var grumbles = [
-        {
-          title: "I am Grumble One"
-        },
-        {
-          title: "I'm another Grumble"
-        }
-      ]
-    </script>
-    <script src="js/app.js"></script>
+<script>
+  var grumbles = [
+    {
+      title: "I am Grumble One"
+    },
+    {
+      title: "I'm another Grumble"
+    }
+  ]
+</script>
+<script src="js/app.js"></script>
 ```
 
 We can access this global variable in all the other files. Set `this.grumbles` equal to that variable in our controller:
@@ -321,7 +321,7 @@ function Router($stateProvider){
 $ touch js/grumbles/show.html
 ```
 
-```
+```html
 <!-- js/grumbles/show.html -->
 The show page
 ```
