@@ -23,12 +23,22 @@
       link.textContent  = (hTag.textContent);
       hTag.innerHTML    = link.outerHTML;
     });
+    var copy = document.querySelector("[type='checkbox']")
+    document.body.addEventListener("copy", function(e){
+      if(copy.value) e.preventDefault()
+    })
   });
 </script>
 
 <div markdown='1' class='markdown-body'>
 
 # Grumblr Lab
+
+<label>
+<input type='checkbox' name='prevent-copy'>
+  Prevent copy/paste?
+</label>
+
 
 ## Local Setup
 
@@ -44,7 +54,7 @@ $ git checkout -b ui-router 1.0.0
 Let's start our server locally:
 
 ```
-$ http-server
+$ hs
 ```
 Now if you go to `localhost:8080` you should see your app.
 
@@ -78,7 +88,7 @@ Add `ng-app` to index.html
 
 <section markdown="1">
 
-- Configure the module you just created, by adding a function that will serve as your `RouterFunction`
+- Configure the module you just created, by adding a function that will serve as your `Router` function
   - Make sure to inject `$stateProvider`, and pass it in as an argument to your function
 
 ```js
@@ -138,7 +148,7 @@ Link to this file in `index.html`
 ```js
 // app.js
 
-function RouterFunction($stateProvider){
+function Router($stateProvider){
   $stateProvider
   .state("grumbleIndex", {
     url: "/grumbles",
@@ -159,7 +169,7 @@ function RouterFunction($stateProvider){
 <!-- ./index.html -->
 <div ui-view></div>
 ```
-Visit: http://localhost:9000/#/grumbles
+Visit: http://localhost:8080/#/grumbles
 
 You should see "I'm in the controller!" in the console.
 
@@ -272,7 +282,7 @@ Before we make the show pages themselves, we're going to create some links to th
 
 The problem is, these grumbles don't actually have IDs -- they're just items in an array.
 
-Inside `ng-repeat`, you automatically have access to a variable called `$index`. This refers to the index of the current item in the thing being repeated.
+Inside `ng-repeat`, you automatically have access to a variable called [`$index`](https://docs.angularjs.org/api/ng/directive/ngRepeat). This refers to the index of the current item in the thing being repeated.
 
 ```html
 <h2>I'm the Grumbles index!</h2>
@@ -408,10 +418,13 @@ function GrumbleShowControllerFunction($stateParams){
 <section markdown="1">
 
 ```html
+<!-- js/grumbles/show.html -->
 <h2>{% raw %}{{GrumbleShowViewModel.grumble.title}}{% endraw %}</h2>
 ```
 
 You should see the grumble in the browser
+
+[The solution code is available here.](https://github.com/ga-dc/grumblr_angular/tree/ui-router-solution)
 
 </section>
 
@@ -425,31 +438,31 @@ This data won't persist since we're not hooked up to a database: refresh the pag
 
 But being able to CRD grumbles, even if they just exist until you next refresh the page, will be really useful in doing it for realzies later on!
 
-Q. Why are we just doing CRD? Where's the `U`?
+Thanks to two-way data binding, an "update" button is unnecessary! The grumble is updated automatically as you type.
 
----
+#### The Create State
 
-> Thanks to two-way data binding, an "update" button is unnecessary! The grumble is updated automatically as you type.
+1. Create a new state for creating a grumble
+1. Create a new controller for creating a grumble
+1. Link to the new state from the index state
+1. Create a template containing a form for a new grumble
+  - add `data-ng-model="GrumbleNewViewModel.newGrumble.title"`
+  - add `data-ng-click="GrumbleNewViewModel.create()"`
+1. on `ng-submit`
+  - access grumble properties with `this.newGrumble` in the controller
+  - push the new grumble into the global `grumbles` array
+1. `$state.go` to the show view for the new grumble
 
-To start, here's what you'll need to make "Create" work:
+#### Deleting a grumble
 
-`data-ng-model="GrumbleIndexViewModel.newGrumble.title"`
+1. Add a link to delete a grumble
+1. Add a method on the grumble show controller to remove that grumble from the array
 
-`data-ng-click="GrumbleIndexViewModel.create()"`
-
-```js
-this.newGrumble = {};
-this.create = function(){
-  grumbles.unshift(this.newGrumble);
-  this.newGrumble = {}
-}
-```
-
-Take these snippets and incorporate them into your Grumblr in the appropriate way. Then, work on updating and deleting grumbles.
-
-[The solution code is available here.](https://github.com/ga-dc/grumblr_angular/tree/ui-router-solution)
+</section>
 
 ## Double Bonus
+
+<section markdown="1">
 
 ### $locationProvider
 
