@@ -176,6 +176,39 @@ function stopLightController($state, $stateParams){
   }
 }
 ```
+
+One thing we should talk about is how we can do templating and partials in angular. Let's take our existing app and have a template render the view instead of having it in our `index.html` First let's create a view:
+
+```bash
+$ touch stoplight.html
+```
+
+Then finally lets important to code pertinent to stoplights from `index.html` to `stoplight.html`
+
+Take the following code:
+
+```html
+<div id="traffic-light">
+  <div
+  ng-repeat="color in vm.colors"
+  ng-click="vm.turn(color)"
+  ng-style="{background: vm.bg}"
+  ng-class="{ 'off': vm.bg != color }"
+  ></div>
+</div>
+```
+
+Remove it from `index.html` and place it in `stoplight.html`. Then finally include a `templateUrl` as a property of the state:
+
+```js
+.state('color', {
+  url: '/:color',
+  controller: 'StopLightController',
+  controllerAs: 'vm',
+  templateUrl: 'stoplight.html'
+})
+```
+
 ---
 
 ## [You do: Grumblr](http://ga-wdi-lessons.github.io/angular-routing/lab.html)
