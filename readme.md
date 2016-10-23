@@ -97,7 +97,7 @@ angular
 .config(["$stateProvider", Router])
 
 function Router($stateProvider){
-
+  console.log('Router setup correctly')
 }
 ```
 
