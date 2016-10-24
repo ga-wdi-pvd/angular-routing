@@ -25,7 +25,7 @@
     });
     var copy = document.querySelector("[type='checkbox']")
     document.body.addEventListener("copy", function(e){
-      if(copy.value) e.preventDefault()
+      if(copy.checked) e.preventDefault()
     })
   });
 </script>
@@ -60,9 +60,7 @@ Now if you go to `localhost:8080` you should see your app.
 
 #### Open the file in Atom and your browser
 
-It's all terribly exciting: the word `Grumblr`, and that's pretty much it.
-
-Grumblr is like Tumblr, only grumblier. Eventually, it will be a two-model CRUD app with posts and comments.
+You should see the word Grumblr.
 
 </section>
 
@@ -109,19 +107,11 @@ Refreshing the page should show "working" in the console.
 
 <section markdown="1">
 
-We're just going to make one controller for now: the `index` controller:
+We're just going to make one controller for now: the `index` controller.
 
-```
-$ touch js/grumbles/index.controller.js
-```
-
-This naming convention is used because it puts the `index` controller alphabetically right next to the `index` view. Since each view is going to have a controller, we're not going to put all the controllers together the way we would in Rails: that would result in a lot of jumping around from file-to-file.
-
-In our `index controller`, let's add the following code:
+In `app.js`, let's add the following code:
 
 ```js
-angular
-.module("grumblr")
 .controller("GrumbleIndexController", [
   GrumbleIndexControllerFunction
 ]);
@@ -129,13 +119,6 @@ angular
 function GrumbleIndexControllerFunction(){
   console.log("I'm in the controller!");
 }
-```
-
-Link to this file in `index.html`
-
-```html
-<!-- after app.js -->
-<script src='js/grumbles/index.controller.js'></script>
 ```
 
 </section>
@@ -153,7 +136,7 @@ function Router($stateProvider){
   .state("grumbleIndex", {
     url: "/grumbles",
     controller: "GrumbleIndexController",
-    controllerAs: "GrumbleIndexViewModel"
+    controllerAs: "vm"
   });
 }
 ```
@@ -184,7 +167,8 @@ We can have Angular load and insert whole HTML files for us -- just like with *p
 Let's create a folder in which we can put some partials:
 
 ```
-$ touch js/grumbles/index.html
+$ mkdir js/ng-views
+$ touch js/ng-views/index.html
 ```
 
 Let's put a piece of HTML into that `index.html`, just so we know it's working:
@@ -199,8 +183,8 @@ function RouterFunction($stateProvider){
   .state("grumbleIndex", {
     url: "/grumbles",
     controller: "GrumbleIndexController",
-    controllerAs: "GrumbleIndexViewModel"
-    templateUrl: "js/grumbles/index.html"
+    controllerAs: "vm"
+    templateUrl: "js/ng-views/index.html"
   });
 }
 ```
@@ -216,13 +200,8 @@ function RouterFunction($stateProvider){
 
 Things to check:
 
-- Did you link to all your js files in index.html
 - Are there any errors in the console?
 
-```html
-<script src="js/app.js"></script>
-<script src="js/grumbles/index.controller.js"></script>
-```
 </section>
 
 ## Load fake data into index controller
@@ -247,11 +226,9 @@ Before `<script src="js/app.js">`, let's add this:
 
 We can access this global variable in all the other files. Set `this.grumbles` equal to that variable in our controller:
 
-```js
-// js/grumbles/index.controller.js
-
+```diff
 function GrumbleIndexControllerFunction(){
-  this.grumbles = grumbles;
++  this.grumbles = grumbles;
 }
 ```
 
@@ -262,8 +239,8 @@ function GrumbleIndexControllerFunction(){
 <section markdown="1">
 
 ```html
-<!-- js/grumbles/index.html -->
-<div data-ng-repeat="grumble in GrumbleIndexViewModel.grumbles">
+<!-- js/ng-views/index.html -->
+<div data-ng-repeat="grumble in vm.grumbles">
   <p>{% raw %}{{grumble.title}}{% endraw %}</p>
 </div>
 ```
@@ -286,7 +263,7 @@ Inside `ng-repeat`, you automatically have access to a variable called [`$index`
 
 ```html
 <h2>I'm the Grumbles index!</h2>
-<div data-ng-repeat="grumble in GrumbleIndexViewModel.grumbles">
+<div data-ng-repeat="grumble in vm.grumbles">
   <p><a data-ui-sref="grumbleShow({id: $index})">{{grumble.title}}</a></p>
 </div>
 ```
@@ -309,14 +286,14 @@ function Router($stateProvider){
   .state("grumbleIndex", {
     url: "/grumbles",
     controller: "GrumbleIndexController",
-    controllerAs: "GrumbleIndexViewModel",
-    templateUrl: "js/grumbles/index.html"
+    controllerAs: "vm",
+    templateUrl: "js/ng-views/index.html"
   })
   .state("grumbleShow", {
     url: "/grumbles/:id",
     controller: "GrumbleShowController",
-    controllerAs: "GrumbleShowViewModel",
-    templateUrl: "js/grumbles/show.html"
+    controllerAs: "vm",
+    templateUrl: "js/ng-views/show.html"
   });
 }
 ```
@@ -328,11 +305,11 @@ function Router($stateProvider){
 <section markdown="1">
 
 ```
-$ touch js/grumbles/show.html
+$ touch js/ng-views/show.html
 ```
 
 ```html
-<!-- js/grumbles/show.html -->
+<!-- js/ng-views/show.html -->
 The show page
 ```
 
@@ -342,17 +319,6 @@ The show page
 ## Grumble Show Controller
 
 <section markdown="1">
-```
-$ touch js/grumbles/show.controller.js
-```
-
-Be sure to include it in your main `index.html`:
-
-```html
-<script src="js/app.js"></script>
-<script src="js/grumbles/index.controller.js"></script>
-<script src="js/grumbles/show.controller.js"></script>
-```
 
 #### Set up
 
@@ -375,11 +341,12 @@ We'll update the router accordingly to reference the new controller:
 ```js
 .state("grumbleShow", {
   url: "/grumbles/:id",
-  templateUrl: "js/grumbles/show.html",
+  templateUrl: "js/ng-views/show.html",
   controller: "GrumbleShowController",
-  controllerAs: "GrumbleShowViewModel"
+  controllerAs: "vm"
 });
 ```
+
 </section>
 
 ## Retrieve index from url with `$stateParams`
@@ -389,8 +356,6 @@ We'll update the router accordingly to reference the new controller:
 Now we need a way of getting the ID from the URL. Angular makes this possible with a module called `$stateParams`, included with `ui.router`. We'll inject it into the controller the same way we injected into the router, and add a `console.log` so we can see what's in `$stateParams`:
 
 ```js
-angular
-.module("grumblr")
 .controller("GrumbleShowController", [
   "$stateParams",
   GrumbleShowControllerFunction
@@ -418,8 +383,8 @@ function GrumbleShowControllerFunction($stateParams){
 <section markdown="1">
 
 ```html
-<!-- js/grumbles/show.html -->
-<h2>{% raw %}{{GrumbleShowViewModel.grumble.title}}{% endraw %}</h2>
+<!-- js/ng-views/show.html -->
+<h2>{% raw %}{{vm.grumble.title}}{% endraw %}</h2>
 ```
 
 You should see the grumble in the browser
