@@ -56,6 +56,8 @@ $ hs -p 9000
 $ open http://localhost:9000/
 ```
 
+>Note: `hs` can be installed on your system with `npm install -g http-server`
+
 ### What works so far
 
 Clicking on a bulb illuminates the correct color.
