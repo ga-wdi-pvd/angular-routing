@@ -48,7 +48,7 @@ To start, let's fork the `grumblr_angular` [repo](https://github.com/ga-wdi-exer
 We can get today's **starter** code by checking out a new branch:
 
 ```
-$ git checkout -b ui-router
+$ git checkout -b ui-router 1.0.0
 ```
 
 Let's start our server locally:
