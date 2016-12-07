@@ -183,7 +183,7 @@ function RouterFunction($stateProvider){
   .state("grumbleIndex", {
     url: "/grumbles",
     controller: "GrumbleIndexController",
-    controllerAs: "vm"
+    controllerAs: "vm",
     templateUrl: "js/ng-views/index.html"
   });
 }
@@ -264,7 +264,7 @@ Inside `ng-repeat`, you automatically have access to a variable called [`$index`
 ```html
 <h2>I'm the Grumbles index!</h2>
 <div data-ng-repeat="grumble in vm.grumbles">
-  <p><a data-ui-sref="grumbleShow({id: $index})">{{grumble.title}}</a></p>
+  <p><a data-ui-sref="grumbleShow({id: $index})">{% raw %}{{grumble.title}}{% endraw %}</a></p>
 </div>
 ```
 
