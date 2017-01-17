@@ -61,7 +61,7 @@ $ open http://localhost:9000/
 
 This app has one naming error, and doesn't follow some of the conventions we've seen already. Can you figure out what could be changed in app.js and index.html? 
 
-Here's a screenshot of the [updated code]('stop-light-fixup.png'): 
+Here's a screenshot of the [updated code](stop-light-fixup.png): 
 
 What shoudl work: clicking on a bulb illuminates the correct color.
 
