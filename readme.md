@@ -5,7 +5,7 @@
 - Explain what dependency injection is and what problem it solves
 - Explain the purpose of templates in Angular
 - Create separate views and routes for each CRUD action
-- Load Angular templtes by using the `ui-view` directive
+- Load Angular templates by using the `ui-view` directive
 - Access query params and update the URL by using the `$stateProvider` and `$state`
 - Define multiple controllers in a single module
 
@@ -63,7 +63,7 @@ This app has one naming error, and doesn't follow some of the conventions we've 
 
 Here's a screenshot of the [updated code](stop-light-fixup.png): 
 
-What shoudl work: clicking on a bulb illuminates the correct color.
+What should work: clicking on a bulb illuminates the correct color.
 
 ### What we'll do
 
@@ -84,7 +84,7 @@ angular.module("stopLightApp", ["ui.router"])
 
 The process of requiring dependencies in Angular is called **dependency injection**. It's an extremely important part of Angular since this framework is all about modules being dependent on other modules.
 
-So what is Dependency Injection? It is a fancy word that simply means, as an angular developer, we need to manually specify the objects and libraries that we want a component to use, at the moment we need to use them. The component does not locate dependencies on its own. Dependency Injection helps in making components reusable, maintanable, and testable. It also makes dependencies configurable.
+So what is Dependency Injection? It is a fancy word that simply means, as an angular developer, we need to manually specify the objects and libraries that we want a component to use, at the moment we need to use them. The component does not locate dependencies on its own. Dependency Injection helps in making components reusable, maintainable, and testable. It also makes dependencies configurable.
 
 Read more about Dependency Injection [here](https://www.tutorialspoint.com/angularjs/angularjs_dependency_injection.htm)
 
@@ -143,7 +143,7 @@ Let's replace the `ng-controller` with `ui-view`:
 <div ui-view>
 ```
 
-But don't worry! The controller isn't going anywhere, we are just going to rearange its setup code. Instead of setting up the controller in the view, we are going to set it up in our app.js.
+But don't worry! The controller isn't going anywhere, we are just going to rearrange its setup code. Instead of setting up the controller in the view, we are going to set it up in our app.js.
 
 #### Let the state choose the controller
 
@@ -257,6 +257,7 @@ Remove it from `index.html` and place it in `stoplight.html`. Then finally inclu
 - [UI Router Official Resources](https://github.com/angular-ui/ui-router#resources)
 - [UI Router Docs](https://github.com/angular-ui/ui-router/wiki)
 - [UI Router Tutorials](https://ui-router.github.io/ng1/)
+- [Dependency Injection](https://www.tutorialspoint.com/angularjs/angularjs_dependency_injection.htm)
 
 ## Screencasts
 
