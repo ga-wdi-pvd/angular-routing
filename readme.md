@@ -5,8 +5,8 @@
 - Explain what dependency injection is and what problem it solves
 - Explain the purpose of templates in Angular
 - Create separate views and routes for each CRUD action
-- Use the `ui-view` directive to load angular templates
-- Use `$stateProvider` and `$state` to access query parameters and update the URL
+- Load Angular templtes by using the `ui-view` directive
+- Access query params and update the URL by using the `$stateProvider` and `$state`
 - Define multiple controllers in a single module
 
 ## Framing (15 / 15)
@@ -17,9 +17,9 @@ So far we've been learning about Angular and its awesome power as front-end fram
 
 > Single Page Applications are Web apps that load a single HTML page and dynamically update that page as the user interacts with the app. SPAs use AJAX and HTML5 to create fluid and responsive web apps, without constant page reloads.
 
-### Turn and Talk: Problems with SPA's
+### Turn and Talk: Problems with SPA's (10 mintes)
 
-Take 1 minute to brainstorm any potential problems with SPAs. Then take another minute coming up with a short list with your neighbor; we'll go around and share with the class.
+Take 2 minutes to brainstorm any potential problems with SPAs. Then take another minute coming up with a short list with your neighbor; we'll go around and share with the class.
 
 ---
 
@@ -47,10 +47,9 @@ As a result, this allows changes to the browser's URL to drive navigation throug
 
 Today, we are going to build off of what we learned in the intro class, and represent state utilizing `uiRouter`.
 
-## Please Sit Back and Enjoy the Ride for this one
 
 ```
-$ git clone https://github.com/ga-wdi-exercises/angular-ui-router-stoplight.git
+$ git clone https://github.com/ga-wdi-pvd/angular-ui-router-stoplight.git
 $ cd angular-ui-router-stoplight/
 $ hs -p 9000
 $ open http://localhost:9000/
@@ -60,7 +59,11 @@ $ open http://localhost:9000/
 
 ### What works so far
 
-Clicking on a bulb illuminates the correct color.
+This app has one naming error, and doesn't follow some of the conventions we've seen already. Can you figure out what could be changed in app.js and index.html? 
+
+Here's a screenshot of the [updated code]('stop-light-fixup.png'): 
+
+What shoudl work: clicking on a bulb illuminates the correct color.
 
 ### What we'll do
 
@@ -69,17 +72,23 @@ Clicking on a bulb illuminates the correct color.
 - Let the router decide which controller to use
 - Create a `ui-view`
 
+### Please Sit Back and Enjoy the Ride for this one
+
 #### Inject the `ui.router` dependency
 
 ```js
-angular.module("stoplight", ["ui.router"])
+angular.module("stopLightApp", ["ui.router"])
 ```
 
 ##### Dependency Injection
 
 The process of requiring dependencies in Angular is called **dependency injection**. It's an extremely important part of Angular since this framework is all about modules being dependent on other modules.
 
-What happens if we were to remove the Array all together?
+So what is Dependency Injection? It is a fancy word that simply means, as an angular developer, we need to manually specify the objects and libraries that we want a component to use, at the moment we need to use them. The component does not locate dependencies on its own. Dependency Injection helps in making components reusable, maintanable, and testable. It also makes dependencies configurable.
+
+Read more about Dependency Injection [here](https://www.tutorialspoint.com/angularjs/angularjs_dependency_injection.htm)
+
+When defining a module, we can pass an array of dependencies. What happens if we were to remove the Array all together?
 
 We get an error. In order to create a module we have to specify the number of dependencies it has, even if that number is zero.
 
@@ -87,7 +96,7 @@ A `.module` with an array creates a new module; without an array it looks up an 
 
 [Bonus! Use strict && IIFEs](styleguide.md)
 
-###### Configuring ui.router
+#### Configuring ui.router
 
 Remember in Rails we had a `config/routes.rb` file with all of the routes defined in it. Here, we put the `routes` inside a `config` module.
 
@@ -95,7 +104,7 @@ Let's add `.config` to our `app.js`:
 
 ```js
 angular
-.module("stoplight", ["ui.router"])
+.module("stopLightApp", ["ui.router"])
 .config(["$stateProvider", Router])
 
 function Router($stateProvider){
@@ -103,7 +112,7 @@ function Router($stateProvider){
 }
 ```
 
-###### `$stateProvider`
+#### `$stateProvider`
 
 A **state** in Angular is basically a route: it's an umbrella term for a URL, the view associated with it, and any controllers used in that view.
 
@@ -120,51 +129,58 @@ function Router($stateProvider){
 
 We've just defined the first **state**. Remember, we said earlier that a state is a lot like a route in Rails: it's a URL, often with an associated view and controller.
 
-In our browser, let's visit `http://localhost:8080/#/red`. (We'll talk about that weird hashmark in a second.)
+In our browser, let's visit `http://localhost:9000/#/red`. (We'll talk about that weird hashmark in a second.)
 
 .....and we shouldn't see anything exciting.
 
-###### `ui-view`
+#### `ui-view`
 
 Let's replace the `ng-controller` with `ui-view`:
 
 ```html
-<div ng-controller='stoplightController as vm'>
+<div ng-controller='stopLightController as vm'>
 <!-- should be: -->
 <div ui-view>
 ```
 
-`index.html` is now like the `application.html.erb` file we had in Rails.
+But don't worry! The controller isn't going anywhere, we are just going to rearange its setup code. Instead of setting up the controller in the view, we are going to set it up in our app.js.
 
-###### Let the state choose the controller
+#### Let the state choose the controller
 
 ```js
+//app.js
+
 function Router($stateProvider){
   $stateProvider
   .state("color", {
     url: "/:color",
-    controller: "stoplightController",
+    controller: "stopLightController",
     controllerAs: "vm"
   });
 }
 ```
 
-###### View the state params
+#### View the state params
 
-Add `$stateParams` as a dependency to `stoplightController`
-
+Add `$stateParams` as a dependency to `stopLightController`. Notice "$stateParams" is within quotes when being added as a dependency. Then, use $stateParams in the stopLightController function. Within `function stopLightController`, we will use $stateParams (not within quotes!) to initially set the bg color, accessing it from the passed it URL params available to us via the URL params. 
 ```js
-.controller("stoplightController", ["$stateParams", stopLightController])
-//...
-function stoplightController($sateParams){
+//app.js
+
+.controller("stopLightController", ["$stateParams", stopLightController])
+
+//...other code like function Router()....
+
+function stopLightController($stateParams){
   console.log($stateParams)
   this.bg = $stateParams.color
 }
 ```
 
-###### Update the url on click
+##### Update the url on click
 
-Inject `$state` to the controller
+Great, so our URL is now talking to our stoplight. What about when a user clicks a color? Can we go the other way and update the URL?
+
+Of course we can, because this is Angular. Just inject `$state` into the controller:
 
 ```js
 .controller("stoplightController", ["$state","$stateParams", stopLightController])
@@ -179,13 +195,15 @@ function stopLightController($state, $stateParams){
 }
 ```
 
+Does it work? Awww yea!
+
 One thing we should talk about is how we can do templating and partials in angular. Let's take our existing app and have a template render the view instead of having it in our `index.html` First let's create a view:
 
 ```bash
 $ touch stoplight.html
 ```
 
-Then finally lets important to code pertinent to stoplights from `index.html` to `stoplight.html`
+Then finally lets import the code pertinent to stoplights from `index.html` to `stoplight.html`
 
 Take the following code:
 
@@ -238,6 +256,7 @@ Remove it from `index.html` and place it in `stoplight.html`. Then finally inclu
   - It was originally going to be part of this class, but is maybe a bit tangential -- although pretty cool if you want to get more into the guts of this thing!
 - [UI Router Official Resources](https://github.com/angular-ui/ui-router#resources)
 - [UI Router Docs](https://github.com/angular-ui/ui-router/wiki)
+- [UI Router Tutorials](https://ui-router.github.io/ng1/)
 
 ## Screencasts
 
